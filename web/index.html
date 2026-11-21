@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#2b6cb0" />
+    <title>Goo Goo Volley</title>
+    <meta name="description" content="Squishy 3D beach volleyball in your browser. Play the CPU, a friend, or a random opponent." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 56 C8 22 22 10 32 10 S56 22 56 56 Z' fill='%233ddc97'/%3E%3Ccircle cx='25' cy='32' r='7' fill='white'/%3E%3Ccircle cx='40' cy='32' r='7' fill='white'/%3E%3Ccircle cx='27' cy='33' r='3.5' fill='%231a2238'/%3E%3Ccircle cx='42' cy='33' r='3.5' fill='%231a2238'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <div id="letterbox"><div></div><div></div></div>
+
+    <div id="hud" hidden>
+      <div class="score">
+        <span class="name left" id="name0">YOU</span>
+        <span class="pts" id="score0">0</span>
+        <span class="colon">:</span>
+        <span class="pts" id="score1">0</span>
+        <span class="name right" id="name1">CPU</span>
+      </div>
+      <div id="banner"></div>
+    </div>
+
+    <div id="replay-badge" hidden><span class="rec"></span>REPLAY <small>0.4×</small></div>
+    <div id="brain-label" hidden></div>
+    <div id="you-label" hidden>YOU</div>
+
+    <section id="menu" class="panel">
+      <h1 class="logo"><span>Goo</span> <span>Goo</span> <em>Volley</em></h1>
+      <p class="tag">Squishy beach volleyball. First to 7.</p>
+      <div class="buttons">
+        <button data-act="cpu" class="big">Play the CPU</button>
+        <div class="diff" role="radiogroup" aria-label="CPU difficulty">
+          <label><input type="radio" name="diff" value="easy" /> Easy</label>
+          <label><input type="radio" name="diff" value="normal" checked /> Normal</label>
+          <label><input type="radio" name="diff" value="hard" /> Hard</label>
+        </div>
+        <button data-act="queue">Find a random match</button>
+        <button data-act="invite">Invite a friend</button>
+        <button data-act="local" class="ghost">2 players, 1 keyboard</button>
+      </div>
+      <p class="keys">Move <kbd>←</kbd><kbd>→</kbd> or <kbd>A</kbd><kbd>D</kbd> · Jump <kbd>↑</kbd> <kbd>W</kbd> or <kbd>Space</kbd> · Hold to jump higher</p>
+    </section>
+
+    <section id="waiting" class="panel small" hidden>
+      <h2 id="wait-title">Looking for an opponent…</h2>
+      <div id="invite-box" hidden>
+        <p>Send this link to a friend:</p>
+        <div class="link"><input id="invite-link" readonly /><button id="copy">Copy</button></div>
+      </div>
+      <p class="hint">Warm up against the CPU while you wait.</p>
+      <button data-act="menu" class="ghost">Cancel</button>
+    </section>
+
+    <section id="over" class="panel small" hidden>
+      <h2 id="over-title">You win!</h2>
+      <p id="over-score"></p>
+      <div class="buttons row">
+        <button data-act="rematch" class="big">Rematch</button>
+        <button data-act="menu" class="ghost">Menu</button>
+      </div>
+      <p id="rematch-note" class="hint"></p>
+    </section>
+
+    <div id="toast" hidden></div>
+
+    <nav id="tools" aria-label="Debug views">
+      <button data-tool="brain" title="Show what the CPU is thinking (B)"><b>B</b> CPU brain</button>
+      <button data-tool="net" title="Netcode panel (N)"><b>N</b> Netcode</button>
+      <button data-tool="replay" title="Slow-motion replays (R)" class="on"><b>R</b> Replays</button>
+      <button data-tool="sound" title="Sound (M)" class="on"><b>M</b> Sound</button>
+    </nav>
+
+    <aside id="netpanel" hidden>
+      <h3>Netcode</h3>
+      <dl>
+        <dt>Mode</dt><dd id="ns-mode">offline</dd>
+        <dt>Ping</dt><dd id="ns-rtt">–</dd>
+        <dt>Running ahead</dt><dd id="ns-ahead">–</dd>
+        <dt>Re-simulated</dt><dd id="ns-resim">–</dd>
+        <dt>Input arrival</dt><dd id="ns-lead">–</dd>
+        <dt>State check</dt><dd id="ns-sync">–</dd>
+      </dl>
+      <label class="slider">Extra lag <output id="lag-out">0 ms</output>
+        <input id="lag" type="range" min="0" max="400" step="10" value="0" />
+      </label>
+      <label class="check"><input id="predict" type="checkbox" checked /> Predict + roll back</label>
+    </aside>
+
+    <div id="touch" hidden>
+      <button data-key="left" aria-label="Left">◀</button>
+      <button data-key="right" aria-label="Right">▶</button>
+      <button data-key="jump" aria-label="Jump" class="jump">▲</button>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

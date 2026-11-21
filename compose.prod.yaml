@@ -1,0 +1,22 @@
+# Production: one container on the shared Caddy network.
+#   docker compose -f compose.prod.yaml up -d --build
+services:
+  goo-goo-volley:
+    build: .
+    container_name: goo-goo-volley
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      PORT: 8787
+      IP_HEADER: cf-connecting-ip # Cloudflare → Caddy → here
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - reverse-proxy
+
+networks:
+  reverse-proxy:
+    external: true
+    name: reverse-proxy_web
